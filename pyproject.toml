@@ -8,6 +8,8 @@ packages = [{include = "job_site_to_postgres"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
+requests = "^2.31.0"
+psycopg2 = "^2.9.6"
 
 
 [build-system]
