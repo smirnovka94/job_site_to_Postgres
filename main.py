@@ -1,16 +1,49 @@
-# This is a sample Python script.
+import psycopg2
+from utils.DBPostgres import DBManager
+from utils.func import printj, psycopg2_connect, create_bd, cook_db, fill_bd
+from utils.hh_vacancies import HeadHunterAPI
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    search_query = input("Введите Вакансию для поиска: ")
+
+    # Запускаем поиск в HH.ru
+    hh_api = HeadHunterAPI(search_query)
+    # Получаем сокращенные данные по вакансиям из API сайта
+    hh_vacancy = hh_api.short_data_vacancy()
+
+    # Открываем pgAdmin
+    password = input("Введите пароль от pgAdmin: ")
+
+    conn = psycopg2_connect(password)
+    conn.autocommit = True
+    cur = conn.cursor()
+    cur.execute(f"DROP DATABASE hh")
+    cur.execute(f"CREATE DATABASE hh")
+    conn.close()
+
+    # Создаем Таблицы с Вакансиями и уникальными Компаниями
+    create_bd(password)
+
+    # Подготавливаем спарсенные данные с hh.ru для внедрения в таблицу
+    data_vacancies, data_companies = cook_db(hh_vacancy)
+
+    # Заполняем Таблицы готовыми данными
+    fill_bd(password, data_vacancies, data_companies)
+
+    # Запускаем DBManager
+    postgres = DBManager(password)
+
+    # postgres.get_companies_and_vacancies_count()
+
+    # postgres.get_all_vacancies()
+
+    # postgres.get_avg_salary()
+
+    # postgres.get_vacancies_with_higher_salary()
+
+    # postgres.get_vacancies_with_keyword()
+
+
+
+
