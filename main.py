@@ -15,21 +15,25 @@ if __name__ == '__main__':
     # Открываем pgAdmin
     password = input("Введите пароль от pgAdmin: ")
 
-    conn = psycopg2_connect(password)
+    conn = psycopg2_connect(password, "postgres")
     conn.autocommit = True
     cur = conn.cursor()
-    cur.execute(f"DROP DATABASE hh")
-    cur.execute(f"CREATE DATABASE hh")
+    db_name = "hh"
+    try:
+        cur.execute(f"DROP DATABASE {db_name}")
+    except psycopg2.errors.InvalidCatalogName:
+        pass
+    cur.execute(f"CREATE DATABASE {db_name}")
     conn.close()
 
     # Создаем Таблицы с Вакансиями и уникальными Компаниями
-    create_bd(password)
+    create_bd(password, db_name)
 
     # Подготавливаем спарсенные данные с hh.ru для внедрения в таблицу
     data_vacancies, data_companies = cook_db(hh_vacancy)
 
     # Заполняем Таблицы готовыми данными
-    fill_bd(password, data_vacancies, data_companies)
+    fill_bd(password, db_name, data_vacancies, data_companies)
 
     # Запускаем DBManager
     postgres = DBManager(password)

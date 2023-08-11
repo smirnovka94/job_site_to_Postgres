@@ -9,7 +9,7 @@ def printj(dict_to_print: dict) -> None:
     print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
 
 
-def psycopg2_connect(password):
+def psycopg2_connect(password, dbname):
     """
     Подключается к БД
     :param password: Пароль от pgAdmin
@@ -17,21 +17,21 @@ def psycopg2_connect(password):
     """
     return psycopg2.connect(
             host = "localhost",
-            database = "postgres",
+            database = dbname,
             user="postgres",
             password=password,
             port=5432
             )
 
-def create_bd(password):
+def create_bd(password, db_name):
     # Создаем Таблицы
-    conn = psycopg2_connect(password)
+    conn = psycopg2_connect(password, db_name)
 
     with conn.cursor() as cur:
         cur.execute("""
             CREATE TABLE company (
                 id_company INTEGER PRIMARY KEY,
-                name_company VARCHAR(50) NOT NULL
+                name_company VARCHAR(100) NOT NULL
             )
         """)
     with conn.cursor() as cur:
@@ -72,8 +72,8 @@ def cook_db(vacancy):
 
     return data_vacancies, data_companies
 
-def fill_bd(password, vacancies, companies):
-    conn = psycopg2_connect(password)
+def fill_bd(password, db_name,  vacancies, companies):
+    conn = psycopg2_connect(password, db_name)
 
     # Заполняем данными Таблицу компаний
     with conn.cursor() as cur:
