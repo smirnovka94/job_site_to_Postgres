@@ -9,7 +9,7 @@ def printj(dict_to_print: dict) -> None:
     print(json.dumps(dict_to_print, indent=2, ensure_ascii=False))
 
 
-def psycopg2_connect(password, dbname):
+def psycopg2_connect(password: str, dbname: str):
     """
     Подключается к БД
     :param password: Пароль от pgAdmin
@@ -23,7 +23,7 @@ def psycopg2_connect(password, dbname):
             port=5432
             )
 
-def create_bd(password, db_name):
+def create_bd(password: str, db_name: str):
     # Создаем Таблицы
     conn = psycopg2_connect(password, db_name)
 
@@ -52,7 +52,7 @@ def create_bd(password, db_name):
     conn.commit()
     conn.close()
 
-def cook_db(vacancy):
+def cook_db(vacancy: tuple):
     # Ищем одинаковые названия компаний и генерируем словарь Название: условный номер
     data1, data2, data3, data4, data5, data6, data7 = vacancy
     data_vacancies = []
@@ -72,7 +72,7 @@ def cook_db(vacancy):
 
     return data_vacancies, data_companies
 
-def fill_bd(password, db_name,  vacancies, companies):
+def fill_bd(password: str, db_name: str,  vacancies: list, companies: list):
     conn = psycopg2_connect(password, db_name)
 
     # Заполняем данными Таблицу компаний

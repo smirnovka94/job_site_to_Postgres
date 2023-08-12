@@ -3,7 +3,7 @@ import json
 
 
 class HeadHunterAPI():
-    def __init__(self, name):
+    def __init__(self, name: str):
         self.name = name
 
 
@@ -75,7 +75,6 @@ class HeadHunterAPI():
                 exchange_s.append('')
             else:
                 exchange_s.append(values['salary']['currency'])
-        # exchange_s = [values['salary']['currency'] for values in self.get_vacancies()]
         return exchange_s
 
     def short_data_vacancy(self):
