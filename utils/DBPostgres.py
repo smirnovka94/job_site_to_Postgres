@@ -4,12 +4,12 @@ from utils.func import psycopg2_connect, printdb
 
 
 class DBManager():
-    def __init__(self, password):
+    def __init__(self, password: str, db_name: str):
         self.password = password
-
+        self.db_name = db_name
     def get_companies_and_vacancies_count(self):
         """получает список всех компаний и количество вакансий у каждой компании."""
-        self.conn = psycopg2_connect(self.password)
+        self.conn = psycopg2_connect(self.password, self.db_name)
         cur = self.conn.cursor()
         cur.execute\
         ("""

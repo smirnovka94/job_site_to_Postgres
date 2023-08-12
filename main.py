@@ -36,7 +36,7 @@ if __name__ == '__main__':
     fill_bd(password, db_name, data_vacancies, data_companies)
 
     # Запускаем DBManager
-    postgres = DBManager(password)
+    postgres = DBManager(password, db_name)
 
     # postgres.get_companies_and_vacancies_count()
 
